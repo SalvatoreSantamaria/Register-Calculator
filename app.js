@@ -3,22 +3,36 @@ let taxTotal = 0;
 
 
 function purchasedItem(str) {
-  itemName = str.replace(/[0-9.'at']/g, '');
+  itemName = str.replace(/[0-9.]/g, '')
+  itemName = itemName.replace('at', '');
   return(itemName)
 }
 
 function salesTax(str) {
   arr = str.split('at');
   cost = arr[1]
-  let salesTaxTotal = cost * 0.15;
-  add(salesTaxTotal);
-  addTax(salesTaxTotal);
-  return salesTaxTotal;
+  let salesTax = (cost * 0.15).toFixed(2);
+
+  roundCentsUp = salesTax.split('.')[1]
+
+
+  // roundUp(parseFloat(roundCentsUp * .01))
+  let salesTaxRounded = roundUp(parseFloat(roundCentsUp))
+
+
+  add(salesTaxRounded);
+  addTax(salesTaxRounded);
+  return salesTaxRounded;
+}
+
+function roundUp(roundCentsUp) {
+  return((Math.ceil(roundCentsUp/5)*5) * .01);
 }
 
 function itemCost(str) {
   arr = str.split('at');
   cost = arr[1]
+  console.log(cost)
   add(cost)
   return cost;
 }
@@ -29,13 +43,14 @@ function quantity(str){
 }
 
 function add(cost){
-  total = parseInt(cost) + parseInt(total);
-  return total;
+  total = parseFloat(cost) + parseFloat(total);
+  
+  return total.toFixed(2);
 }
 
 function addTax(tax) {
-  taxTotal = parseInt(tax) + parseInt(taxTotal);
-  return taxTotal;
+  taxTotal = parseFloat(tax) + parseFloat(taxTotal);
+  return taxTotal.toFixed(2);
   
 }
 
@@ -59,9 +74,6 @@ document.getElementById("submitText").addEventListener("click", function () {
 
 
 function Basket(itemInput) {
-  // this.item = item;
-  // this.price = 1;
-  // this.tax = 2;
 
   this.item = purchasedItem(itemInput)
   this.tax = salesTax(itemInput)
@@ -72,86 +84,51 @@ function Basket(itemInput) {
 
 //UI Constructor
 function UI() {}
-
-//Adds basket to list.
-//Adds "addBasketToList to prototype"
 UI.prototype.addBasketToList = function(basket) {
   const list = document.getElementById('basket-list');
-  //Creates tr Element
   const row = document.createElement('tr');
-  //Inserts cols with template literal
   row.innerHTML = `
     <td>${basket.item}</td>
     <td>${basket.price}</td>
     <td>${basket.tax}</td>
   `;
   list.appendChild(row);
-
   const itemsTax = document.getElementById('basket-list-tax') //
-  itemsTax.innerText = `${basket.taxTotal}`
-
+  itemsTax.innerText = `Tax ${basket.taxTotal}`
   const itemsTotal = document.getElementById('basket-list-total') //
-  itemsTotal.innerText = `${basket.total}`
-
-
-  // listTotal.appendChild('')
-  // //Creates tr Element
-  // const listTotalRow = document.createElement('tr');
-  // listTotalRow.innerHTML = `
-  //   <td>${basket.total}</td>
-  //   `;
-  // listTotal.replaceChild(listTotalRow);
-
+  itemsTotal.innerText = `Total: ${basket.total}`
 }
 
 // Shows alert when one of the fields is left blank
 UI.prototype.showAlert = function(themessage, className) {
   //Constructs Element for the error message
   let div = document.createElement('div');
-  //Add classes to div. Below adds the class name "alert", and also adds in the classname that is passed in by the function
   div.className = `alert ${className}`;
-  //Adds text by adding a text node. Actual text is the text coming in from the function
   div.appendChild(document.createTextNode(themessage));
-  //Insert into the DOM. 
-  //Get parent, which is the containter
   const container = document.querySelector('.container');
-  //Get the form, because we want to put the error before the form
   const form = document.querySelector('#basket-form');
-  //Take container, which is parent, and insert div and what we want to insert before, which is form.
   container.insertBefore(div, form);
-  //Set timeout after 3 seconds. Set timeout is part of the window object. Second parameter is number of milliseconds
   setTimeout(function(){
     document.querySelector('.alert').remove();
   }, 3000);
 }
 
-//Delete basket
-// UI.prototype.deleteBasket = function(target){
-//   if(target.className === 'delete') {
-//     //First parent element is td, second parent element is tr
-//     target.parentElement.parentElement.remove();
-//   }
-// }
+
 
 //Clears field method
 UI.prototype.clearfields = function(){
   document.getElementById('item').value = '';
-  // document.getElementById('price').value = '';
-  // document.getElementById('tax').value = '';
+
 }
 
-//Event Listeners
-//Event Listener for adding a basket
+
 document.getElementById('basket-form').addEventListener('submit', 
   function(e) {
 
-    //Gets form values
+
     let item = document.getElementById('item').value
-    // a = document.getElementById('price').value,
-    // i = document.getElementById('tax').value
 
    //Creates basket
-   //let basket = new Basket(t, a, i);
    let basket = new Basket(item);
    //Creates a UI object
    const ui = new UI();
@@ -160,35 +137,16 @@ document.getElementById('basket-form').addEventListener('submit',
    
    //Validate that the forms have content
    if(item === '') {
-   
-   //Error Alert
-   ui.showAlert('Please fill in the field', 'error');
-
+     ui.showAlert('Please fill in the field', 'error');
    } else {
+    ui.addBasketToList(basket);
+    ui.showAlert('Item Added', 'success');
 
-   //Adds basket to list
-   ui.addBasketToList(basket);
-   //Shows success message when basket is successfully added
-   ui.showAlert('Item Scanned', 'success');
-
-   //Clears input fields
-   ui.clearfields();
+    //Clears input fields
+    ui.clearfields();
 
    }
 
 //prevents initial behavior
   e.preventDefault();
 });
-
-//Event Listener for deleting a basket. Function takes in event, which is e.
-// document.getElementById('basket-list').addEventListener('click', function(e){
-// //Target delete X from within prototype method in the UI
-// //creates "ui"
-// const ui = new UI();
-// //calls ui method of deleteBasket and passes in the target
-// // ui.deleteBasket(e.target);
-// //Shows alert of 'Basket removed' using the class of success
-// ui.showAlert('Basket Removed', 'success');
-
-//   e.preventDefault();
-// });
