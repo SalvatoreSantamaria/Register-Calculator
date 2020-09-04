@@ -19,40 +19,19 @@
  .error {
    background: red;
  }
- 
  </style>
+
   <!--Page HTML-->
 </head>
   <body>
-
-
-    <!-- Input <input type='text' id="inputText" />
-    <br/> -->
-
-    <!-- <input type="Submit" id="submitText" value="Submit" input/> -->
-    <!-- <div id="items"></div>
-    <div id="items2"></div>
-    <div id="salesTaxes"></div>
-    <div id="total"></div> -->
-
+    <div id="total"></div>
     <hr>
-
     <div class="container">
       <form id="basket-form">
         <label form="title">Item</label>
-        <!--class='u-full-width' is a CSS Skeleton class that I did not add, see https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css-->
         <input type="text" id='item' class='u-full-width'>
         <input type="submit" id="submitText" value="submit">
       </div>
-      <!-- <div class="container">
-        <label form="title">Price</label>
-        <input type="text" id='price' class='u-full-width'>
-      </div>
-      <div class="container">
-        <label form="title">Tax</label>
-        <input type="text" id='tax' class='u-full-width'>
-        <input type="submit" value="submit">
-      </div> -->
     </form>
       <hr>
       <table class='container'>
@@ -61,43 +40,15 @@
             <th>Item</th>
             <th>Price</th>
             <th>Tax</th>
-
           </tr>
         </thead>
         <tbody id='basket-list'></tbody>
       </table>
-
       <hr>   
-      
-      <!-- <table class='container'>
-        <thead>
-          <tr>
-            <th id='basket-list-tax'></th>
-            <th id='basket-list-total'></th>
-          </tr>
-        </thead>
-        <tbody id='basket-list'></tbody>
-      </table> -->
       <div class='container'>
         <div id='basket-list-tax'></div>
         <div id='basket-list-total'></div>
       </div>
-
-
-
     <script src='app.js'></script>
-
-
-
-
   </body>
 </html>
-
-
-<!-- input 
-1 Music CD at 14.99
-
-Output
-Music CD: 16.49
-Sales Taxes: 1.50
-Total: 16.49 -->
